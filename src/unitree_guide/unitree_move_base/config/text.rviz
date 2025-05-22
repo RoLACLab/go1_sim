@@ -1,0 +1,211 @@
+Panels:
+  - Class: rviz/Displays
+    Help Height: 78
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1
+        - /RobotModel1
+        - /Pose Array1
+      Splitter Ratio: 0.6526610255241394
+    Tree Height: 675
+  - Class: rviz/Selection
+    Name: Selection
+  - Class: rviz/Tool Properties
+    Expanded:
+      - /2D Pose Estimate1
+      - /2D Nav Goal1
+      - /Publish Point1
+    Name: Tool Properties
+    Splitter Ratio: 0.5886790156364441
+  - Class: rviz/Views
+    Expanded:
+      - /Current View1
+    Name: Views
+    Splitter Ratio: 0.5
+  - Class: rviz/Time
+    Experimental: false
+    Name: Time
+    SyncMode: 0
+    SyncSource: ""
+Preferences:
+  PromptSaveOnExit: true
+Toolbars:
+  toolButtonStyle: 2
+Visualization Manager:
+  Class: ""
+  Displays:
+    # Grid from move_base
+    - Alpha: 0.5
+      Cell Size: 0.5
+      Class: rviz/Grid
+      Color: 0; 0; 0
+      Enabled: true
+      Line Style:
+        Line Width: 0.029999999329447746
+        Value: Lines
+      Name: Grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 80
+      Reference Frame: base
+      Value: true
+
+    # Robot Model from move_base
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:  # ... (same links as original move_base.rviz)
+      Name: RobotModel
+      Robot Description: robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+
+    # LiDAR from move_base
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 0.30399999022483826
+        Min Value: 0.30399999022483826
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/LaserScan
+      Color: 255; 0; 0
+      Color Transformer: FlatColor
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: LaserScan
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.009999999776482582
+      Style: Points
+      Topic: /scan
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
+
+    # Camera Point Clouds from check_joint (ENABLED)
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: RGB8
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 0; 0; 0
+      Name: PointCloud Face
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.009999999776482582
+      Style: Flat Squares
+      Topic: /cam1/point_cloud_face
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
+
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: RGB8
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 0; 0; 0
+      Name: PointCloud Chin
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.009999999776482582
+      Style: Flat Squares
+      Topic: /cam2/point_cloud_chin
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
+
+    # ... Repeat for other cameras (/cam3/point_cloud_left, etc.)
+
+    # Navigation displays from move_base
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz/Path
+      Color: 255; 0; 0
+      Enabled: true
+      Name: Local Plan
+      Topic: /move_base/TrajectoryPlannerROS/local_plan
+      Value: true
+
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz/Path
+      Color: 0; 213; 0
+      Enabled: true
+      Name: Global Plan
+      Topic: /move_base/TrajectoryPlannerROS/global_plan
+      Value: true
+
+  Enabled: true
+  Global Options:
+    Background Color: 238; 238; 238  # From check_joint
+    Default Light: true
+    Fixed Frame: base  # Changed from odom to base
+    Frame Rate: 30
+
+  # Keep tools from both configs
+  Tools:
+    - Class: rviz/Interact
+    - Class: rviz/MoveCamera
+    - Class: rviz/Select
+    - Class: rviz/SetInitialPose
+    - Class: rviz/SetGoal
+    - Class: rviz/PublishPoint
+
+  Views:
+    Current:
+      Class: rviz/Orbit
+      Distance: 1.0180186033248901
+      Focal Point: {X: 0.108, Y: 0.022, Z: -0.088}
+      Name: Current View
+      Target Frame: base
+
+Window Geometry:  # Keep from move_base
+  Height: 904
+  Width: 1432
+  X: 281
+  Y: 40
