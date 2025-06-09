@@ -122,6 +122,9 @@ include_directories(
 add_executable(ln src/lidar_noise.cpp)
 target_link_libraries(ln ${catkin_LIBRARIES})
 
+add_executable(no_mod src/no_mod.cpp)
+target_link_libraries(no_mod ${catkin_LIBRARIES})
+
 add_executable(talker src/talker.cpp)
 target_link_libraries(talker ${catkin_LIBRARIES})
 # add_dependencies(talker beginner_tutorials_generate_messages_cpp)

@@ -10,17 +10,12 @@ void scanCallback(const sensor_msgs::LaserScan::ConstPtr& msg)
           modified_scan.ranges.size(),
           modified_scan.angle_min,
           modified_scan.angle_max);
-
-  for(int i = 170; i < 220; ++i) {
-    modified_scan.ranges[i] = 2.5;
-  }
-
   pub.publish(modified_scan);
 }
 
 int main(int argc, char* argv[])
 {
-  ros::init(argc, argv, "ln");
+  ros::init(argc, argv, "no_mod");
   ros::NodeHandle nh;
   
   // Initialize publisher with the correct message type
