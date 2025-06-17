@@ -11,13 +11,23 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <termios.h>
+#include <deque>
+#include <chrono>
+#include <pthread.h>
+
 #include "interface/CmdPanel.h"
 #include "common/mathTools.h"
 
-class KeyBoard : public CmdPanel{
+struct ScheduledCommand {
+    char cmd;
+    float time;
+};
+
+class KeyBoard : public CmdPanel {
 public:
     KeyBoard();
     ~KeyBoard();
+
 private:
     static void* runKeyBoard(void *arg);
     void* run(void *arg);
@@ -27,11 +37,14 @@ private:
     pthread_t _tid;
     float sensitivityLeft = 0.05;
     float sensitivityRight = 0.05;
+    char _c;
     struct termios _oldSettings, _newSettings;
     fd_set set;
     int res;
     int ret;
-    char _c;
+
+    std::chrono::steady_clock::time_point startTime;
+    std::deque<ScheduledCommand> scheduledCommands;
 };
 
 #endif  // KEYBOARD_H

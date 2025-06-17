@@ -10,23 +10,23 @@ class ScanToJson:
         rospy.init_node('scan_to_json')
         
         # Generate timestamped filename
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.filename = "scan_data_{}.json".format(timestamp)
+        #timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.filename = "scan_data.json" #.format(timestamp)
         self.filepath = os.path.join(os.path.expanduser("~"), self.filename)
         
-        # Initialize JSON Lines file
-        self.json_file = open(self.filepath, 'w')
         rospy.loginfo("Logging scans to: %s", self.filepath)
         
         # Subscribe to laser scan topic
         rospy.Subscriber("/scan", LaserScan, self.scan_callback)
         rospy.on_shutdown(self.shutdown_handler)
 
+        # Initialize file handle (will be opened in write mode later)
+        self.json_file = None
+
     def scan_callback(self, msg):
         try:
             # Convert LaserScan message to JSON-serializable dictionary
             scan_dict = {
-                "NEW DATA"
                 "header": {
                     "seq": msg.header.seq,
                     "stamp": {
@@ -46,20 +46,21 @@ class ScanToJson:
                 "intensities": list(msg.intensities)
             }
             
-            # Write as JSON Lines format
-            self.json_file.write(json.dumps(scan_dict) + '\n')
+            # Open file in write mode (overwrites existing content)
+            with open(self.filepath, 'w') as self.json_file:
+                # Write entire JSON dictionary to file (single object)
+                json.dump(scan_dict, self.json_file)
             
-            # Periodically flush to ensure data is written
+            # Periodically log
             if msg.header.seq % 100 == 0:
-                self.json_file.flush()
-                rospy.loginfo("Logged scan #%d to file", msg.header.seq)
+                rospy.loginfo("Overwrote file with scan #%d", msg.header.seq)
                 
         except Exception as e:
             rospy.logerr("Error processing scan: %s", str(e))
 
     def shutdown_handler(self):
-        rospy.loginfo("Shutting down. Closing JSON file.")
-        self.json_file.close()
+        rospy.loginfo("Shutting down scan logger")
+        # File is already closed by 'with' block, no action needed
 
 if __name__ == '__main__':
     logger = ScanToJson()
