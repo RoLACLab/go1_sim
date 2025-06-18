@@ -14,43 +14,8 @@ KeyBoard::KeyBoard() {
     userValue.setZero();
     startTime = std::chrono::steady_clock::now();
 
-    // Always start with these two commands
-    scheduledCommands.push_back({'2', 0.0f});  // Stand
-    scheduledCommands.push_back({'4', 1.0f});  // Walk mode after 1s
-
-    // Load additional commands from text file
-    std::ifstream file("/home/scakki-vm/action_plan.txt");
-    if (file.is_open()) {
-        std::string line;
-        while (std::getline(file, line)) {
-            if (line.empty() || line[0] == '#') continue;
-
-            std::istringstream iss(line);
-            std::string cmdStr;
-            float timeVal;
-
-            if (iss >> cmdStr >> timeVal) {
-                if (!cmdStr.empty()) {
-                    ScheduledCommand sc;
-                    sc.cmd = (cmdStr == "SPACE") ? ' ' : cmdStr[0];
-                    sc.time = timeVal;
-                    scheduledCommands.push_back(sc);
-                }
-            }
-        }
-
-        // Sort all commands (including default) by time
-        std::sort(scheduledCommands.begin(), scheduledCommands.end(),
-            [](const ScheduledCommand& a, const ScheduledCommand& b) {
-                return a.time < b.time;
-            });
-    } else {
-        std::cerr << "Failed to open action_plan.txt" << std::endl;
-    }
-
     pthread_create(&_tid, NULL, runKeyBoard, (void*)this);
 }
-
 
 KeyBoard::~KeyBoard() {
     pthread_cancel(_tid);
@@ -76,14 +41,27 @@ UserCommand KeyBoard::checkCmd() {
 
 void KeyBoard::changeValue() {
     switch (_c) {
-    case 'w': case 'W': userValue.ly = std::min(userValue.ly + sensitivityLeft, 1.0f); break;
-    case 's': case 'S': userValue.ly = std::max(userValue.ly - sensitivityLeft, -1.0f); break;
-    case 'd': case 'D': userValue.lx = std::min(userValue.lx + sensitivityLeft, 1.0f); break;
-    case 'a': case 'A': userValue.lx = std::max(userValue.lx - sensitivityLeft, -1.0f); break;
-    case 'i': case 'I': userValue.ry = std::min(userValue.ry + sensitivityRight, 1.0f); break;
-    case 'k': case 'K': userValue.ry = std::max(userValue.ry - sensitivityRight, -1.0f); break;
-    case 'l': case 'L': userValue.rx = std::min(userValue.rx + sensitivityRight, 1.0f); break;
-    case 'j': case 'J': userValue.rx = std::max(userValue.rx - sensitivityRight, -1.0f); break;
+    // Movement commands - fixed values
+    case 'w': case 'W': userValue.ly = 0.15f; break;   // Forward
+    case 's': case 'S': userValue.ly = -0.15f; break;  // Backward
+    case 'd': case 'D': userValue.lx = 0.15f; break;   // Right
+    case 'a': case 'A': userValue.lx = -0.15f; break;  // Left
+    
+    // Rotation commands - fixed values
+    case 'i': case 'I': userValue.ry = 0.15f; break;   // Rotate up
+    case 'k': case 'K': userValue.ry = -0.15f; break;  // Rotate down
+    case 'l': case 'L': userValue.rx = 0.15f; break;   // Rotate right
+    case 'j': case 'J': userValue.rx = -0.15f; break;  // Rotate left
+    
+    // Stop command - set all movement values to 0 (using z/Z)
+    case 'z': case 'Z':
+        userValue.ly = 0.0f;
+        userValue.lx = 0.0f;
+        userValue.ry = 0.0f;
+        userValue.rx = 0.0f;
+        std::cout << "Full stop (ZERO) - all movement values set to 0" << std::endl;
+        break;
+        
     default: break;
     }
 }
@@ -94,28 +72,61 @@ void* KeyBoard::runKeyBoard(void *arg) {
 }
 
 void* KeyBoard::run(void *arg) {
+    std::cout << "KeyBoard thread started" << std::endl;
+    
+    // Initialization sequence
+    std::cout << "Executing initialization sequence..." << std::endl;
+    
+    // Stand command
+    _c = '2';
+    userCmd = checkCmd();
+    std::cout << "Stand command sent" << std::endl;
+    _c = '\0';
+    usleep(3000000); // 3 second delay to ensure stand completes
+    
+    // Walk mode command
+    _c = '4';
+    userCmd = checkCmd();
+    std::cout << "Walk mode command sent" << std::endl;
+    _c = '\0';
+    usleep(4000000); // 4 second delay
+    
+    std::cout << "Initialization complete, starting file monitoring" << std::endl;
+    
+    // File monitoring loop
     while (true) {
-        // Calculate elapsed time in seconds
-        float currentTime = std::chrono::duration<float>(
-            std::chrono::steady_clock::now() - startTime
-        ).count();
-
-        // Process all commands that are due
-        while (!scheduledCommands.empty() && 
-               scheduledCommands.front().time <= currentTime) {
-            char command = scheduledCommands.front().cmd;
-            scheduledCommands.pop_front();
-
-            // Process the command
-            _c = command;
-            userCmd = checkCmd();
-            if (userCmd == UserCommand::NONE) {
-                changeValue();
-            }
-            _c = '\0';  // Reset after processing
+        std::ifstream file("action_plan.txt");
+        if (!file.is_open()) {
+            file.open("/home/shivayogiakki/action_plan.txt");
         }
         
-        usleep(1000);  // Sleep 1ms to prevent busy-waiting
+        if (file.is_open()) {
+            std::string line;
+            if (std::getline(file, line)) {
+                std::istringstream iss(line);
+                std::string cmdStr;
+                float timeVal;
+                
+                if (iss >> cmdStr >> timeVal) {
+                    if (!cmdStr.empty()) {
+                        char command = cmdStr[0];
+                        std::cout << "Executing command: '" << command << "'" << std::endl;
+                        _c = command;
+                        userCmd = checkCmd();
+                        if (userCmd == UserCommand::NONE) {
+                            changeValue();
+                        }
+                        _c = '\0';
+                    }
+                }
+            }
+            file.close();
+        } else {
+            std::cerr << "Failed to open action_plan.txt" << std::endl;
+        }
+        
+        usleep(100000); // 100ms delay between checks
     }
+
     return NULL;
 }

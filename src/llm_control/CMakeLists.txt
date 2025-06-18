@@ -127,6 +127,8 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+add_executable(scan_to_json src/scan_to_json.cpp)
+target_link_libraries(scan_to_json ${catkin_LIBRARIES})
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/llm_control.cpp

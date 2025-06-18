@@ -31,6 +31,7 @@ public:
 private:
     static void* runKeyBoard(void *arg);
     void* run(void *arg);
+    void executeImmediateCommand(char command);
     UserCommand checkCmd();
     void changeValue();
 
