@@ -5,9 +5,11 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /Odometry1
         - /Pose Array1
+        - /LaserScan1
       Splitter Ratio: 0.6526610255241394
-    Tree Height: 675
+    Tree Height: 793
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -25,7 +27,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: LaserScan
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -67,9 +69,9 @@ Visualization Manager:
           Color: 204; 51; 204
           Scale: 1
           Value: true
-        Value: true
-      Enabled: false
-      Keep: 100
+        Value: false
+      Enabled: true
+      Keep: 1
       Name: Odometry
       Position Tolerance: 0.10000000149011612
       Shape:
@@ -84,7 +86,7 @@ Visualization Manager:
         Value: Arrow
       Topic: /odom
       Unreliable: false
-      Value: false
+      Value: true
     - Angle Tolerance: 0.10000000149011612
       Class: rviz/Odometry
       Covariance:
@@ -133,6 +135,11 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        FL_calf_rotor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         FL_foot:
           Alpha: 1
           Show Axes: false
@@ -143,17 +150,27 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        FL_hip_rotor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         FL_thigh:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        FL_thigh_shoulder:
+        FL_thigh_rotor:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
         FR_calf:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        FR_calf_rotor:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -168,18 +185,28 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        FR_hip_rotor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         FR_thigh:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        FR_thigh_shoulder:
+        FR_thigh_rotor:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
         Link Tree Style: Links in Alphabetic Order
         RL_calf:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        RL_calf_rotor:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -194,17 +221,27 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        RL_hip_rotor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         RL_thigh:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        RL_thigh_shoulder:
+        RL_thigh_rotor:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
         RR_calf:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        RR_calf_rotor:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -219,12 +256,17 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        RR_hip_rotor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         RR_thigh:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        RR_thigh_shoulder:
+        RR_thigh_rotor:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -288,6 +330,16 @@ Visualization Manager:
           Show Trail: false
           Value: true
         imu_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        laser:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        support:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -389,15 +441,13 @@ Visualization Manager:
       Axis: Z
       Channel Name: intensity
       Class: rviz/LaserScan
-      Color: 255; 0; 0
+      Color: 239; 41; 41
       Color Transformer: FlatColor
       Decay Time: 0
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 4096
       Min Color: 0; 0; 0
-      Min Intensity: 0
       Name: LaserScan
       Position Transformer: XYZ
       Queue Size: 10
@@ -405,7 +455,7 @@ Visualization Manager:
       Size (Pixels): 3
       Size (m): 0.009999999776482582
       Style: Points
-      Topic: /scan_corrupt
+      Topic: /scan
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
@@ -465,7 +515,7 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: -3.5050063133239746
+      Angle: -3.125007390975952
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
@@ -478,16 +528,16 @@ Visualization Manager:
       Scale: 78.0899429321289
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz)
-      X: 1.7774624824523926
-      Y: 0.3730974793434143
+      X: 3.2227814197540283
+      Y: 0.5307154059410095
     Saved: ~
 Window Geometry:
   Displays:
-    collapsed: false
-  Height: 904
-  Hide Left Dock: false
+    collapsed: true
+  Height: 1022
+  Hide Left Dock: true
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd00000004000000000000016a0000032efc0200000005fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000198000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d0000032e000000c900ffffff000000010000010f00000270fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000002800000270000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004a00000003efc0100000002fb0000000800540069006d00650000000000000004a0000004f300fffffffb0000000800540069006d00650100000000000004500000000000000000000004280000032e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd00000004000000000000016a000003a4fc0200000005fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000198000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073000000003d000003a4000000c900ffffff000000010000010f00000270fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000002800000270000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004a00000003efc0100000002fb0000000800540069006d00650000000000000004a0000004f300fffffffb0000000800540069006d0065010000000000000450000000000000000000000690000003a400000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -496,6 +546,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: false
-  Width: 1432
-  X: 281
-  Y: 40
+  Width: 1680
+  X: 0
+  Y: 364

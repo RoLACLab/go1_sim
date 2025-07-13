@@ -84,15 +84,15 @@ def main_loop(poll_interval=2.0):
                     # Save in text format instead of JSON
                     if save_action_plan(action_plan):
                         action_history.append(action_plan)
-                        #if len(action_history) == 5:
-                        #    # Append 3 actions with keys 'l', 'd', 'a' and their corresponding values
-                        #    keys = ['l', 'd', 'a']
-                        #    last_three = action_history[-3:]
-                        #    combined_actions = [
-                        #        {"key": k, "value": a.get("value", 0.0)}
-                        #        for k, a in zip(keys, last_three)
-                        #    ]
-                        #    action_history.extend(combined_actions)
+                        if len(action_history) == 20:
+                            # Append 3 actions with keys 'L', 'D', 'A' and their corresponding values
+                            keys = ['L', 'D', 'A']
+                            last_three = action_history[-3:]
+                            combined_actions = [
+                                {"key": k, "value": a.get("value", 0.0)}
+                                for k, a in zip(keys, last_three)
+                            ]
+                            action_history.extend(combined_actions)
 
 
                 except requests.exceptions.RequestException as e:

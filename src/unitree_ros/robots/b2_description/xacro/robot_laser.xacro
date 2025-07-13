@@ -1,0 +1,310 @@
+<?xml version="1.0"?>
+
+<robot name="b2_description" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:arg name="DEBUG" default="false"/>
+
+    <xacro:include filename="$(find b2_description)/xacro/const.xacro"/>
+    <xacro:include filename="$(find b2_description)/xacro/materials.xacro"/>
+    <xacro:include filename="$(find b2_description)/xacro/leg.xacro"/>
+    <xacro:include filename="$(find b2_description)/xacro/gazebo.xacro"/>
+     
+    <xacro:include filename="$(find b2_description)/xacro/laser.xacro"/>
+    <xacro:include filename="$(find b2_description)/xacro/laser_sensor.xacro"/>
+
+    <!-- Debug mode will hung up the robot, use "true" or "false" to switch it. -->
+    <xacro:if value="$(arg DEBUG)">
+        <link name="world"/>
+        <joint name="base_static_joint" type="fixed">
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <parent link="world"/>
+            <child link="base"/>
+        </joint>
+    </xacro:if> 
+
+    <link name="base">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+    </link>
+
+    <joint name="floating_base" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <parent link="base"/>
+        <child link="trunk"/>
+    </joint>
+
+    <link name="trunk">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="package://b2_description/meshes/trunk.dae" scale="1 1 1"/>
+            </geometry>
+            <!-- <material name="orange"/> -->
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="${trunk_length} ${trunk_width} ${trunk_height}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin rpy="0 0 0" xyz="${trunk_com_x} ${trunk_com_y} ${trunk_com_z}"/>
+            <mass value="${trunk_mass}"/>
+            <inertia
+                ixx="${trunk_ixx}" ixy="${trunk_ixy}" ixz="${trunk_ixz}"
+                iyy="${trunk_iyy}" iyz="${trunk_iyz}"
+                izz="${trunk_izz}"/>  
+        </inertial>
+    </link>
+
+    <joint name="imu_joint" type="fixed">
+        <parent link="trunk"/>
+        <child link="imu_link"/>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </joint>
+
+    <link name="imu_link">
+        <inertial>
+            <mass value="0.001"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="0.001 0.001 0.001"/>
+            </geometry>
+            <!-- <material name="red"/> -->
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size=".001 .001 .001"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="head_joint" type="fixed">
+        <parent link="trunk"/>
+        <child link="head_Link"/>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </joint>
+
+    <link name="head_Link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0.33989 -0.000168 0.12029"/>
+            <mass value="3.366" />
+            <inertia
+            ixx="0.026455"
+            ixy="3.15E-05"
+            ixz="0.00166"
+            iyy="0.029221"
+            iyz="-3.27E-05"
+            izz="0.010918" />
+        </inertial>
+        <collision>
+            <origin rpy="0 0 0" xyz="0.41 0 0.005"/>
+            <geometry>
+                <box size="0.04 0.12 0.14" />
+            </geometry>
+        </collision>
+        <visual>
+            <origin rpy="0 0 0" xyz="0.41 0 0.005"/>
+            <geometry>
+                <box size="0.04 0.12 0.14" />
+            </geometry>
+            <material name="black"/>
+        </visual>
+    </link>
+
+    <joint name="lidar_joint" type="fixed">
+        <parent link="trunk"/>
+        <child link="lidar_link"/>
+        <origin rpy="0 0 0" xyz="0.34218 0 0.17851"/>
+    </joint>
+
+    <link name="lidar_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <mass value="0.5" />
+            <inertia
+            ixx="0.001"
+            ixy="0"
+            ixz="0"
+            iyy="0.001"
+            iyz="0"
+            izz="0.001" />
+        </inertial>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 -0.02"/>
+            <geometry>
+                <cylinder length="0.16" radius="0.076" />
+            </geometry>
+        </collision>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 -0.02"/>
+            <geometry>
+                <cylinder length="0.16" radius="0.076" />
+            </geometry>
+            <material name="black"/>
+        </visual>
+    </link>
+
+    <joint name="tail_joint" type="fixed">
+        <parent link="trunk"/>
+        <child link="tail_link"/>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </joint>
+
+    <link name="tail_link">
+        <inertial>
+            <origin rpy="0 0 0" xyz="-0.37448 0.000488 0.006495"/>
+            <mass value="0.777" />
+            <inertia
+            ixx="0.0028118"
+            ixy="1.95E-05"
+            ixz="-7.87E-06"
+            iyy="0.0047506"
+            iyz="-1.57E-05"
+            izz="0.0029154" />
+        </inertial>
+        <collision>
+            <origin rpy="0 0 0" xyz="-0.405 0 0.005"/>
+            <geometry>
+                <box size="0.025 0.12 0.14" />
+            </geometry>
+        </collision>
+        <visual>
+            <origin rpy="0 0 0" xyz="-0.405 0 0.005"/>
+            <geometry>
+                <box size="0.025 0.12 0.14" />
+            </geometry>
+            <material name="black"/>
+        </visual>
+    </link>
+
+    <xacro:leg name="FR" mirror="-1" mirror_dae= "False" front_hind="1"  front_hind_dae="True"  />
+    <xacro:leg name="FL" mirror="1"  mirror_dae="True"   front_hind="1"  front_hind_dae="True"  />
+    <xacro:leg name="RR" mirror="-1" mirror_dae="False"  front_hind="-1" front_hind_dae="False" />
+    <xacro:leg name="RL" mirror="1"  mirror_dae="True"   front_hind="-1" front_hind_dae="False" />
+
+    <!-- Gazebo plugin for lidar sensor -->
+    <gazebo reference="lidar_link">
+        <sensor type="ray" name="lidar_sensor">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>false</visualize>
+            <update_rate>10</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-3.14159</min_angle>
+                        <max_angle>3.14159</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.1</min>
+                    <max>30.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </ray>
+            <plugin name="gazebo_ros_lidar" filename="libgazebo_ros_laser.so">
+                <topicName>/scan</topicName>
+                <frameName>lidar_link</frameName>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+    <!-- Optional: Add secondary laser sensor for navigation -->
+    <joint name="nav_laser_joint" type="fixed">
+        <parent link="trunk"/>
+        <child link="nav_laser_link"/>
+        <origin rpy="0 0 0" xyz="0.2 0.0 0.1"/>
+    </joint>
+
+    <link name="nav_laser_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="0.03" radius="0.025"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <cylinder length="0.03" radius="0.025"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+        </inertial>
+    </link>
+
+    <!-- Gazebo plugin for navigation laser sensor -->
+    <gazebo reference="nav_laser_link">
+        <sensor type="ray" name="nav_laser_sensor">
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>false</visualize>
+            <update_rate>20</update_rate>
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>180</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-1.5708</min_angle>
+                        <max_angle>1.5708</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.1</min>
+                    <max>10.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </ray>
+            <plugin name="gazebo_ros_nav_laser" filename="libgazebo_ros_laser.so">
+                <topicName>/nav_scan</topicName>
+                <frameName>nav_laser_link</frameName>
+            </plugin>
+        </sensor>
+    </gazebo>
+
+    <!-- Camera-based laser scan joints (if cameras are added later) -->
+    <!--
+    <joint name="camera_laserscan_joint_left" type="fixed">
+        <origin rpy="0 0.2618 0" xyz="0 0 0"/>
+        <parent link="camera_left"/>
+        <child link="camera_laserscan_link_left"/>
+    </joint>
+
+    <link name="camera_laserscan_link_left">
+    </link>
+
+    <joint name="camera_laserscan_joint_right" type="fixed">
+        <origin rpy="0 0.2618 0" xyz="0 0 0"/>
+        <parent link="camera_right"/>
+        <child link="camera_laserscan_link_right"/>
+    </joint>
+
+    <link name="camera_laserscan_link_right">
+    </link>
+    -->
+
+</robot>

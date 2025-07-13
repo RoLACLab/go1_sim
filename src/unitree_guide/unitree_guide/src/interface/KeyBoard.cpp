@@ -42,16 +42,42 @@ UserCommand KeyBoard::checkCmd() {
 void KeyBoard::changeValue() {
     switch (_c) {
     // Movement commands - fixed values
-    case 'w': case 'W': userValue.ly = 0.15f; break;   // Forward
-    case 's': case 'S': userValue.ly = -0.15f; break;  // Backward
-    case 'd': case 'D': userValue.lx = 0.15f; break;   // Right
-    case 'a': case 'A': userValue.lx = -0.15f; break;  // Left
+    case 'w': case 'W': 
+        userValue.ly = 0.15f;
+        userValue.lx = 0.0f;
+        userValue.ry = 0.0f;
+        userValue.rx = 0.0f; 
+        break;   // Forward
+    case 's': case 'S': 
+        userValue.ly = -0.15f;
+        userValue.lx = 0.0f;
+        userValue.ry = 0.0f;
+        userValue.rx = 0.0f; 
+        break;  // Backward
+    case 'd': case 'D': 
+        userValue.lx = 0.15f;
+        userValue.ly = 0.0f;
+        userValue.ry = 0.0f;
+        userValue.rx = 0.0f; 
+        break;   // Right
+    case 'a': case 'A': 
+        userValue.lx = -0.15f;
+        userValue.ly = 0.0f;
+        userValue.ry = 0.0f;
+        userValue.rx = 0.0f; 
+        break;  // Left
     
     // Rotation commands - fixed values
-    case 'i': case 'I': userValue.ry = 0.15f; break;   // Rotate up
-    case 'k': case 'K': userValue.ry = -0.15f; break;  // Rotate down
-    case 'l': case 'L': userValue.rx = 0.15f; break;   // Rotate right
-    case 'j': case 'J': userValue.rx = -0.15f; break;  // Rotate left
+    case 'i': case 'I': userValue.ry = 0.3f; break;   // Rotate up
+    case 'k': case 'K': userValue.ry = -0.3f; break;  // Rotate down
+    case 'l': case 'L': 
+        userValue.rx = 0.15f;
+        userValue.ly = 0.1f;
+        break;   // Rotate right
+    case 'j': case 'J': 
+        userValue.rx = -0.15f;
+        userValue.ly = 0.1f;
+        break;  // Rotate left
     
     // Stop command - set all movement values to 0 (using z/Z)
     case 'z': case 'Z':
